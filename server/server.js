@@ -45,11 +45,11 @@ var User = mongoose.model('User', {
     }
 });
 
-var newUser = new User({
-    name: "Daniel",
-    email: "aaa@ala"
-});
-//newTodo.save().then((doc) => {
+//var newUser = new User({
+//    name: "Daniel",
+//    email: "aaa@ala"
+//});
+////newTodo.save().then((doc) => {
 //console.log(JSON.stringify(doc))
 //}, (e) => {
 // console.log('Unable to save todo');
