@@ -108,14 +108,18 @@ app.patch('/todos/:id', (req, res) => {
 // Post /users
 //
 app.post('/users', (req, res) => {
-    console.log(req.body);
     var body = _.pick(req.body, ['email', 'password']);
-    console.log(body);
     var user = new User(body);
-    console.log(user);
-    user.save().then((user) => {
-        res.send(user);
+    console.log(user, '1');
+    user.save().then(() => {
+        console.log(user, '2');
+        return user.generateAuthToken();
+        console.log(user, '3');
+    }).then((token) => {
+        console.log(user,'4');
+        res.header('x-auth', token).send(user);
     }).catch((e) => {
+        console.log('errror1122')
         res.status(400).send(e);
     });
 });
