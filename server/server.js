@@ -43,12 +43,10 @@ app.get('/todos/:id', (req, res) => {
 
     //validate id
     if (!ObjectID.isValid(id)) {
-        console.log('ID not valid');
         return res.status(404).send();
     } else {
         Todo.findById(id).then((todo) => {
             if (!todo) {
-                console.log('Could not find TODO with this ID');
                 return res.status(404).send();
             } 
             // Sending response with todo
@@ -63,12 +61,10 @@ app.delete('/todos/:id', (req, res) => {
  var id = req.params.id;
     
     if (!ObjectID.isValid(id)) {
-        console.log('ID not valid');
         return res.status(404).send();
     } else {
         Todo.findByIdAndRemove(id).then((todo) => {
             if (!todo) {
-                console.log('Could not find TODO with this ID');
                 return res.status(404).send();
             } 
             // Sending response with todo
@@ -82,7 +78,6 @@ app.delete('/todos/:id', (req, res) => {
 app.patch('/todos/:id', (req, res) => {
     var id = req.params.id;
     var body = _.pick(req.body, ['text', 'completed']);
-    console.log(body);
     if (!ObjectID.isValid(id)) {
         return res.status(404).send();
     } else { 
@@ -111,16 +106,11 @@ app.patch('/todos/:id', (req, res) => {
 app.post('/users', (req, res) => {
     var body = _.pick(req.body, ['email', 'password']);
     var user = new User(body);
-    console.log(user, '1');
     user.save().then(() => {
-        console.log(user, '2');
         return user.generateAuthToken();
-        console.log(user, '3');
     }).then((token) => {
-        console.log(user,'4');
         res.header('x-auth', token).send(user);
     }).catch((e) => {
-        console.log('errror1122')
         res.status(400).send(e);
     });
 });
