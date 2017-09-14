@@ -168,7 +168,7 @@ describe('PATCH /todos/:id', () => {
             .expect((res) => {
                 expect(res.body.todo.completed).toBe(false);
                 expect(res.body.todo.text).toBe(text);
-                expect(res.body.todo.completedAt).toBeNull();
+                expect(res.body.todo.completedAt).toNotExist();
             })
         .end(done);
         ;
@@ -212,27 +212,45 @@ describe('POST /users', () => {
             .send({email, password})
             .expect(200)
             .expect((res) => {
-                // expect(res.header['x-auth']).toExist();
-                //expect(res.body._id).toExist();
+                expect(res.header['x-auth']).toExist();
+                expect(res.body._id).toExist();
                 expect(res.body.email).toBe(email);
             }).end((err) => {
                 if (err){
                     return done(err);
                 }
                 User.findOne({email}).then((user) => {
-                    //   expect(user).toExist();
-                    //expect(user.password).toNotBe(password);
-                    console.log(user.password, password);
+                    expect(user).toExist();
+                    expect(user.password).toNotBe(password);
                     done();
                 });
             });
     });
 
     it('should return validation error if request invalid', (done) => {
-    
+        var empty = "";
+        request(app)
+            .post('/users')
+            .send({empty, empty})
+            .expect(400)
+            .expect((res) => {
+                expect(res.body._message).toEqual("User validation failed");
+            })
+            .end(done);
     });
 
     it('should not create user if email in use', (done) => {
+        request(app)
+            .post('/users')
+            .send({
+                email: users[0].email,
+                password: 'password123'
+            })
+            .expect(400)
+            .expect((res) => {
+            
+            })
+            .end(done);
     
     })
 });
