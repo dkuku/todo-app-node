@@ -254,3 +254,50 @@ describe('POST /users', () => {
     
     })
 });
+
+describe('POST /users/login',() => {
+    it('should login user with correct user and password', (done) => {
+        request(app)
+            .post('/users/login')
+            .send({
+                email: users[0].email, 
+                password: 'userOnePass'
+            })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.email).toBe(users[0].email);
+                expect(res.body._id).toExist();
+                expect(res.header['x-auth']).toExist();
+            })
+            .end(done);
+    });
+
+    it('should respond 400 for user wirh bad pass', (done) => {
+        request(app)
+            .post('/users/login')
+            .send({
+                email: users[0].email,
+                password: 'badPass'
+            })
+            .expect(400)
+            .expect((res) => {
+                expect(res.body).toEqual({});
+            })
+            .end(done);
+    });
+    
+    it('should respond 400 for user with wrong email', (done) => {
+        request(app)
+            .post('/users/login')
+            .send({email: 'bad@email.ap',
+                password: 'badPass'
+            })
+            .expect(400)
+            .expect((res) => {
+                expect(res.body).toEqual({});
+            })
+            .end(done);
+    });
+
+
+});
